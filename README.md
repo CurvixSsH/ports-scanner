@@ -2,11 +2,11 @@
 
 El código es un programa de escaneo de puertos en Python que utiliza sockets para probar la conectividad a través de los puertos TCP en una dirección ip en alrededor de 50 segundos
 
-#Librerias
+# Librerias
 
 pip install argparse socket threading queue time pyfiglet
 
-#INSTALACION
+# Instalacion
 
 git clone https://github.com/CurvixSsH/ports-scanner.git
 
@@ -14,7 +14,7 @@ cd ports-scanner
 
 python port.py (Host)
 
-#EJEMPLO
+# Ejemplo
 
 python port.py google.com
 
