@@ -1,3 +1,5 @@
+![ip dstat](https://user-images.githubusercontent.com/127477293/227630163-7af14ebf-841e-4813-be00-ed2870c7d6d3.png)
+
 # Ports-scanner
 
 El código es un programa de escaneo de puertos en Python que utiliza sockets para probar la conectividad a través de los puertos TCP en una dirección ip en alrededor de 50 segundos
