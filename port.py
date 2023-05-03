@@ -37,7 +37,7 @@ def parse_args():
     \033[33mpython port.py google.com\033[0m (por defecto) [puertos de 1-65535 / 850 subprocesos / 0.5s / Ping] -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-
     
     
-    \033[33mpython port.py 50.158.22.149 -p 1-6890,8080,57345 -t 800 -to 1 -pn -px http://195.181.152.71:3128\033[0m
+    \033[33mpython port.py google.com -p 1-6890,8080,57345 -t 800 -to 1 -pn -px [protocolo://]host[:puerto]\033[0m
     """)
     parser.add_argument("target", help="IP o hostname", nargs='?')
     parser.add_argument("-p", "--ports", type=str, default="1-65535", help="Rango de puertos a escanear (por defecto: 1-65535). Ejemplo: \033[33m-p 1-500,8080,62544\033[0m")
