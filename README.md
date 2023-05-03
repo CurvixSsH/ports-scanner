@@ -19,7 +19,7 @@ cd ports-scanner
 
 pip3 install -r requirements.txt
 
-python port.py -h
+python port.py -h o python3 port.py -h
 
 # Ejemplo
 
