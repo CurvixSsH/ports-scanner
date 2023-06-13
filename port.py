@@ -9,7 +9,7 @@ import signal
 import sys
 
 def signal_handler(sig, frame):
-    print('Deteniendo el programa...')
+    print('Stopping the program...')
     sys.exit(0)
 
 signal.signal(signal.SIGINT, signal_handler)
@@ -31,20 +31,20 @@ def print_banner():
     print("\033[1;34m" + "+" + "-"*(banner_width-2) + "+\033[0m")
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="""Ejemplos:
+    parser = argparse.ArgumentParser(description="""Examples:
                                      
 
-    \033[33mpython port.py google.com\033[0m (por defecto) [puertos de 1-65535 / 850 subprocesos / 0.5s / Ping] -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-
+    \033[33mpython port.py google.com\033[0m (default) [ports 1-65535 / 850 threads / 0.5s / Ping] -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-
     
     
-    \033[33mpython port.py google.com -p 1-6890,8080,57345 -t 800 -to 1 -pn -px [protocolo://]host[:puerto]\033[0m
+    \033[33mpython port.py google.com -p 1-6890,8080,57345 -t 800 -to 1 -pn -px [protocol://]host[:port]\033[0m
     """)
-    parser.add_argument("target", help="IP o hostname", nargs='?')
-    parser.add_argument("-p", "--ports", type=str, default="1-65535", help="Rango de puertos a escanear (por defecto: 1-65535). Ejemplo: \033[33m-p 1-500,8080,62544\033[0m")
-    parser.add_argument("-t", "--threads", type=int, default=850, help="Número de subprocesos a utilizar (por defecto: 850)")
-    parser.add_argument("-to", "--timeout", type=float, default=0.5, help="Tiempo de espera de conexión en segundos (por defecto: 0.5)")
-    parser.add_argument("-pn", "--no_ping", action="store_true", help="Omitir descubrimiento de hosts")
-    parser.add_argument("-px", "--proxy", type=str, help=" Protocolos \033[32mHTTP\033[0m, \033[32mHTTPS\033[0m, \033[32mSOCKS4\033[0m o \033[32mSOCKS5\033[0m (formato: [\033[33mprotocolo://]host[:puerto\033[0m]). Ejemplo: http://195.181.152.71:3128. Para obtener una lista de proxies disponibles, visite https://hidemy.name/es/proxy-list/")
+    parser.add_argument("target", help="IP or hostname", nargs='?')
+    parser.add_argument("-p", "--ports", type=str, default="1-65535", help="Range of ports to scan (default: 1-65535). Example: \033[33m-p 1-500,8080,62544\033[0m")
+    parser.add_argument("-t", "--threads", type=int, default=850, help="Number of threads to use (default: 850)")
+    parser.add_argument("-to", "--timeout", type=float, default=0.5, help="Connection timeout in seconds (default: 0.5)")
+    parser.add_argument("-pn", "--no_ping", action="store_true", help="Skip host discovery")
+    parser.add_argument("-px", "--proxy", type=str, help=" \033[32mHTTP\033[0m, \033[32mHTTPS\033[0m, \033[32mSOCKS4\033[0m, or \033[32mSOCKS5\033[0m proxy (format: [\033[33mprotocol://]host[:port\033[0m]). Example: http://195.181.152.71:3128. To get a list of available proxies, visit https://hidemy.name/es/proxy-list/")
     args = parser.parse_args()
     return args
 
@@ -109,17 +109,19 @@ def print_result(results):
             port = result
             open_ports.append(port)
     if len(open_ports) == 0:
-        print("\033[1;37m|  No Se Encontraron Puertos Abiertos |\033[0m")
+        print("\033[1;37m|  No Open Ports Found  |\033[0m")
     else:
-        print(f"\033[1;37m|  Se encontraron \033[1;31m{len(open_ports)}\033[1;37m puertos abiertos |\033[0m")
-    print("\033[1;34m|{:^38}|\033[0m".format("RESULTADOS"))
+        print(f"      \033[1;37m|  Found \033[1;31m{len(open_ports)}\033[1;37m open ports  |\033[0m")
+    print("\033[1;34m|{:^38}|\033[0m".format("RESULTS"))
     print("\033[1;34m" + "+" + "-"*(banner_width-2) + "+\033[0m")
     open_ports.sort()
     for port in open_ports:
         service = port_services.get(port, '-')
-        print(f"\033[1;32m| \033[1;32mPort \033[1;37m{port}\033[1;37m/TCP \033[1;32mEsta \033[1;37mAbierto \033[1;32m|\033[0m")
-        print(f"\033[1;34m|   Serv: \033[1;31m{service} |\033[0m")
+        print(f"\033[1;32m| \033[1;32mPort \033[1;37m{port}\033[1;37m/TCP \033[1;32mis \033[1;37mOpen \033[1;32m|\033[0m")
+        print(f"\033[1;34m|   Service: \033[1;31m{service} |\033[0m")
     print("\033[1;34m" + "+" + "-"*(banner_width-2) + "+\033[0m")
+
+
         
 def worker(timeout):
     while True:
@@ -139,7 +141,7 @@ pn = args.no_ping
 num_threads = args.threads
 timeout = args.timeout
 
-print(f"\nEscaneando puertos TCP de {target} ...\n")
+print(f"\nScanning TCP ports of {target} ...\n")
 
 q = Queue()
 results = []
@@ -159,5 +161,6 @@ q.join()
 elapsed_time = time.time() - start_time
 
 print("\n" + "-"*60)
-print(f"\nEscaneo completo en {elapsed_time:.2f} segundos\n")
+print(f"\nScan completed in {elapsed_time:.2f} seconds\n")
 print_result(results)
+
