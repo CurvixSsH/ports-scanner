@@ -1,2 +1,10 @@
-PySocks
+argparse
+socket
+socks
+threading
+queue
+time
 pyfiglet
+signal
+sys
+re
