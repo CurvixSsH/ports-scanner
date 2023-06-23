@@ -1,14 +1,18 @@
 # Actualizacion 
-Escanea los 65.535 puertos en menos de 45 segundos.
+Escanea los 65.535 puertos en menos de 45 segundos. (Imagen 1)
 
+Escaneo de puertos personalizado (imagen 2)
+
+Escaneo de puertos personalizado atraves de un proxy (Imagen 3)
+
+# 1
 ![imagen_2023-06-23_040643343](https://github.com/CurvixSsH/ports-scanner/assets/127477293/3a75c4c0-1b3b-4522-9faa-5e601c84fb2a)
 
-Escaneo de puertos personalizado 
+# 2
 ![imagen_2023-06-23_033650649](https://github.com/CurvixSsH/ports-scanner/assets/127477293/656996b2-3d07-4502-a2cd-bf68592d634f)
 
-Escaneo de puertos personalizado atraves de un proxy 
+# 3
 ![por222](https://github.com/CurvixSsH/ports-scanner/assets/127477293/b410e944-9e76-43c2-a506-1126ce89969f)
-
 
 
 
