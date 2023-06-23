@@ -7,6 +7,7 @@ import time
 import pyfiglet
 import signal
 import sys
+import re 
 
 def signal_handler(sig, frame):
     print('Stopping the program...')
@@ -33,18 +34,16 @@ def print_banner():
 def parse_args():
     parser = argparse.ArgumentParser(description="""Examples:
                                      
-
     \033[33mpython port.py google.com\033[0m (default) [ports 1-65535 / 850 threads / 0.5s / Ping] -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-
     
-    
-    \033[33mpython port.py google.com -p 1-6890,8080,57345 -t 800 -to 1 -pn -px [protocol://]host[:port]\033[0m
+    \033[33mpython port.py google.com -p 1-6890,8080,57345 -t 800 -to 1 -pn -px [protocol://]host[:port\033[0m]
     """)
     parser.add_argument("target", help="IP or hostname", nargs='?')
     parser.add_argument("-p", "--ports", type=str, default="1-65535", help="Range of ports to scan (default: 1-65535). Example: \033[33m-p 1-500,8080,62544\033[0m")
     parser.add_argument("-t", "--threads", type=int, default=850, help="Number of threads to use (default: 850)")
     parser.add_argument("-to", "--timeout", type=float, default=0.5, help="Connection timeout in seconds (default: 0.5)")
     parser.add_argument("-pn", "--no_ping", action="store_true", help="Skip host discovery")
-    parser.add_argument("-px", "--proxy", type=str, help=" \033[32mHTTP\033[0m, \033[32mHTTPS\033[0m, \033[32mSOCKS4\033[0m, or \033[32mSOCKS5\033[0m proxy (format: [\033[33mprotocol://]host[:port\033[0m]). Example: http://195.181.152.71:3128. To get a list of available proxies, visit https://hidemy.name/es/proxy-list/")
+    parser.add_argument("-px", "--proxy", type=str, help="\033[32mHTTP\033[0m, \033[32mHTTPS\033[0m, \033[32mSOCKS4\033[0m, or \033[32mSOCKS5\033[0m proxy (format: [\033[33mprotocol://]host[:port\033[0m]). Example: http://195.181.152.71:3128. To get a list of available proxies, visit https://hidemy.name/es/proxy-list/")
     args = parser.parse_args()
     return args
 
@@ -63,7 +62,8 @@ def set_ping(args):
         ping = False
     else:
         ping = True
-    return ping
+    return not ping
+
 
 def set_proxy(proxy):
     if proxy is not None:
@@ -109,7 +109,7 @@ def print_result(results):
             port = result
             open_ports.append(port)
     if len(open_ports) == 0:
-        print("\033[1;37m|  No Open Ports Found  |\033[0m")
+        print("\033[1;37m|          No Open Ports Found         |\033[0m")
     else:
         print(f"      \033[1;37m|  Found \033[1;31m{len(open_ports)}\033[1;37m open ports  |\033[0m")
     print("\033[1;34m|{:^38}|\033[0m".format("RESULTS"))
@@ -121,46 +121,66 @@ def print_result(results):
         print(f"\033[1;34m|   Service: \033[1;31m{service} |\033[0m")
     print("\033[1;34m" + "+" + "-"*(banner_width-2) + "+\033[0m")
 
-
-        
 def worker(timeout):
     while True:
         port = q.get()
-        result = scan_port(port, timeout, pn=pn)
-        if result:
+        result = scan_port(port, timeout, pn)
+        if result is not None:
             results.append(result)
         q.task_done()
 
-print_banner()
-
 args = parse_args()
 target = args.target
-ping = set_ping(args)
-port_range = set_port_range(args.ports)
-pn = args.no_ping
-num_threads = args.threads
+ports = args.ports
+threads = args.threads
 timeout = args.timeout
+pn = set_ping(args)
+proxy = args.proxy
 
-print(f"\nScanning TCP ports of {target} ...\n")
+port_range = set_port_range(ports)
+set_proxy(proxy)
 
-q = Queue()
+print_banner()
+
+if target is None:
+    print("Error: No target specified.")
+    sys.exit(1)
+print("\nScanning target: \033[1;34m{}\033[0m".format(target))
+print("Scanning ports: \033[1;34m{}\033[0m".format(ports))
+print("Number of threads: \033[1;34m{}\033[0m".format(threads))
+print("Connection timeout: \033[1;34m{} seconds\033[0m".format(timeout))
+if pn:
+    print("Host discovery: \033[1;31mDisabled\033[0m")
+else:
+    print("Host discovery: \033[1;32mEnabled\033[0m")
+
+if not pn:
+    try:
+        target_ip = socket.gethostbyname(target)
+        print("Target IP: \033[1;34m{}\033[0m".format(target_ip))
+    except socket.gaierror:
+        print("Error: Failed to resolve target.")
+        sys.exit(1)
+else:
+    print("Host discovery: \033[1;31mDisabled\033[0m")
+
 results = []
+q = Queue()
 
-start_time = time.time()
-
-for i in range(num_threads):
+for t in range(threads):
     t = threading.Thread(target=worker, args=(timeout,))
     t.daemon = True
     t.start()
+
+start_time = time.time()
 
 for port in port_range:
     q.put(port)
 
 q.join()
 
-elapsed_time = time.time() - start_time
+end_time = time.time()
+scan_time = end_time - start_time
 
-print("\n" + "-"*60)
-print(f"\nScan completed in {elapsed_time:.2f} seconds\n")
 print_result(results)
-
+print("\nScan completed in {:.2f} seconds.".format(scan_time))
