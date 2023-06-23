@@ -1,9 +1,15 @@
 # Actualizacion 
+Escanea los 65.535 puertos en menos de 45 segundos.
 
+![imagen_2023-06-23_040643343](https://github.com/CurvixSsH/ports-scanner/assets/127477293/3a75c4c0-1b3b-4522-9faa-5e601c84fb2a)
+
+Escaneo de puertos personalizado 
 ![imagen_2023-06-23_033650649](https://github.com/CurvixSsH/ports-scanner/assets/127477293/656996b2-3d07-4502-a2cd-bf68592d634f)
 
+Escaneo de puertos personalizado atraves de un proxy 
+![por222](https://github.com/CurvixSsH/ports-scanner/assets/127477293/b410e944-9e76-43c2-a506-1126ce89969f)
 
-![2222333322](https://user-images.githubusercontent.com/127477293/235887436-a01435c0-0a56-4d5d-a28d-f14f9865ce3c.png)
+
 
 
 # Ports-scanner
@@ -45,6 +51,18 @@ Protocolos: HTTP, HTTPS, SOCKS4 o SOCKS5
 Ejemplo= socks5://192.168.1.1:80
 
 Proxys gratis: https://hidemy.name/es/proxy-list/
+
+#COMANDOS
+-p : rango de puertos (predeterminado) 65535
+
+-pn : se omite la fase de descubrimiento del host (ping)
+
+-t : número de hilos o threads que se utilizarán para realizar el escaneo de puertos. Especifica la cantidad de hilos simultáneos que se ejecutarán para acelerar el escaneo. (predeterminado) 850 threads
+
+-to : tiempo de espera o timeout de conexión en segundos (predeterminado) 0.5s
+
+-px : se utiliza para especificar un proxy en el escaneo de puertos. [protocolo://]host[:puerto]
+
 
 
 
