@@ -56,7 +56,8 @@ Ejemplo= socks5://192.168.1.1:80
 
 Proxys gratis: https://hidemy.name/es/proxy-list/
 
-#COMANDOS
+# COMANDOS
+
 -p : rango de puertos (predeterminado) 65535
 
 -pn : se omite la fase de descubrimiento del host (ping)
