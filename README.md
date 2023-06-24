@@ -34,6 +34,8 @@ pip3 install -r requirements.txt
 
 python port.py -h o python3 port.py -h
 
+TUTORIAL:// https://www.youtube.com/watch?v=ishJ0iCYQrI&t=16s&ab_channel=CurvixSsh
+
 # Ejemplo
 
 python port.py google.com
